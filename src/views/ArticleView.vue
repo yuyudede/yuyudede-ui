@@ -201,7 +201,7 @@ onMounted(() => {
 }
 
 .article-content :deep(pre) {
-  background: #f6f8fa;
+  background: var(--code-bg);
   padding: 16px;
   border-radius: 8px;
   overflow-x: auto;
@@ -230,7 +230,7 @@ onMounted(() => {
 
 .comment-item {
   padding: 16px 0;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-soft);
 }
 
 .comment-item:last-child {

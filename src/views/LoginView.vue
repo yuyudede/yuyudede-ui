@@ -89,7 +89,7 @@ async function handleLogin() {
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 120px);
-  background: #f5f7fa;
+  background: var(--bg-page);
 }
 
 .login-card {

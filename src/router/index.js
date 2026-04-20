@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
 const routes = [
-  { path: '/', name: 'Home', component: () => import('../views/HomeView.vue') },
+  { path: '/', name: 'Portal', component: () => import('../views/PortalView.vue') },
+  { path: '/blog', name: 'Blog', component: () => import('../views/HomeView.vue') },
   { path: '/article/:slug', name: 'Article', component: () => import('../views/ArticleView.vue') },
   { path: '/categories', name: 'Categories', component: () => import('../views/CategoryListView.vue') },
   { path: '/category/:slug', name: 'Category', component: () => import('../views/CategoryView.vue') },

@@ -4,8 +4,7 @@
       <router-link to="/" class="logo">yuyudede</router-link>
       <el-menu mode="horizontal" :ellipsis="false" class="nav-menu" router>
         <el-menu-item index="/">首页</el-menu-item>
-        <el-menu-item index="/categories">分类</el-menu-item>
-        <el-menu-item index="/tags">标签</el-menu-item>
+        <el-menu-item index="/blog">博客</el-menu-item>
       </el-menu>
       <div class="header-right">
         <el-switch v-model="isDark" inline-prompt active-text="🌙" inactive-text="☀️" @change="toggleDark" />
@@ -27,7 +26,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
@@ -35,9 +34,21 @@ const auth = useAuthStore()
 const router = useRouter()
 const isDark = ref(false)
 
-function toggleDark(val) {
+function applyDark(val) {
   document.documentElement.classList.toggle('dark', val)
+  localStorage.setItem('theme', val ? 'dark' : 'light')
 }
+
+function toggleDark(val) {
+  applyDark(val)
+}
+
+onMounted(() => {
+  const saved = localStorage.getItem('theme')
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  isDark.value = saved ? saved === 'dark' : prefersDark
+  applyDark(isDark.value)
+})
 
 function handleLogout() {
   auth.logout()
@@ -47,11 +58,12 @@ function handleLogout() {
 
 <style scoped>
 .header {
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-sm);
   position: sticky;
   top: 0;
   z-index: 100;
+  transition: background 0.3s ease;
 }
 .header-inner {
   max-width: 1200px;
@@ -70,6 +82,7 @@ function handleLogout() {
 .nav-menu {
   border: none;
   flex: 1;
+  background: transparent;
 }
 .header-right {
   display: flex;

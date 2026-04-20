@@ -47,8 +47,8 @@ const activeMenu = computed(() => {
 }
 
 .admin-aside {
-  background: #fff;
-  border-right: 1px solid #e4e7ed;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border-color);
   padding-top: 16px;
 }
 
@@ -81,7 +81,7 @@ const activeMenu = computed(() => {
 }
 
 .admin-main {
-  background: #f5f7fa;
+  background: var(--bg-page);
   padding: 24px;
 }
 </style>

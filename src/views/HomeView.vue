@@ -155,7 +155,7 @@ onMounted(() => {
   text-decoration: none;
   color: var(--text-primary);
   padding: 6px 0;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-soft);
   transition: color 0.2s;
 }
 

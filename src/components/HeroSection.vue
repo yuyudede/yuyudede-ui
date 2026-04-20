@@ -8,7 +8,7 @@
       <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
         <path
           d="M0,64 C360,120 720,0 1080,64 C1260,96 1380,80 1440,64 L1440,120 L0,120 Z"
-          fill="#f5f7fa"
+          fill="currentColor"
         />
       </svg>
     </div>
@@ -49,6 +49,7 @@
   left: 0;
   width: 100%;
   line-height: 0;
+  color: var(--bg-page);
 }
 
 .wave svg {
