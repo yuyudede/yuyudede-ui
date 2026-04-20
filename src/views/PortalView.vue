@@ -13,7 +13,6 @@
     </section>
 
     <section class="modules-section">
-      <h2 class="section-title">功能模块</h2>
       <div class="modules-grid">
         <component
           :is="m.active && m.link ? 'router-link' : 'div'"
@@ -149,15 +148,6 @@ const modules = [
   padding: 0 20px 80px;
   position: relative;
   z-index: 2;
-}
-
-.section-title {
-  text-align: center;
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 40px;
-  letter-spacing: 2px;
 }
 
 .modules-grid {
