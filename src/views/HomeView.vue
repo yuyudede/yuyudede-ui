@@ -1,22 +1,11 @@
 <template>
   <div class="home">
-    <HeroSection :stats="heroStats" />
+    <HeroSection />
 
     <div class="container" id="articles">
-      <!-- Section 标题 -->
-      <div class="section-head reveal">
-        <div class="section-label">
-          <span class="laser"></span>
-          <span>LATEST ARTICLES</span>
-        </div>
-        <h2 class="section-title">
-          最新<span class="grad">文章</span>
-        </h2>
-      </div>
-
       <el-row :gutter="28">
         <el-col :span="16" :xs="24" :sm="24" :md="16">
-          <div v-loading="loading" class="article-list reveal">
+          <div v-loading="loading" class="article-list">
             <ArticleCard
               v-for="article in articles"
               :key="article.id"
@@ -24,9 +13,8 @@
             />
             <el-empty v-if="!loading && articles.length === 0" description="暂无文章" />
           </div>
-          <div class="pagination-wrapper reveal">
+          <div v-if="totalPages > 1" class="pagination-wrapper">
             <el-pagination
-              v-if="totalPages > 1"
               background
               layout="prev, pager, next"
               :total="totalElements"
@@ -40,12 +28,9 @@
         <el-col :span="8" :xs="24" :sm="24" :md="8">
           <aside class="sidebar">
             <!-- 关于我 -->
-            <div class="glass-card profile-card reveal">
-              <div class="profile-glow"></div>
-              <div class="avatar-ring">
-                <div class="avatar">
-                  <span>Y</span>
-                </div>
+            <div class="glass-card profile-card">
+              <div class="avatar">
+                <span>Y</span>
               </div>
               <h3 class="profile-name">yuyudede</h3>
               <p class="profile-bio">Full-Stack Developer · Life Explorer</p>
@@ -57,11 +42,6 @@
                 </a>
                 <a href="#" class="social">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.302 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
-                  </svg>
-                </a>
-                <a href="#" class="social">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                   </svg>
                 </a>
@@ -69,20 +49,15 @@
             </div>
 
             <!-- 分类 -->
-            <div class="glass-card reveal">
-              <div class="card-title-row">
-                <span class="dot"></span>
-                <span class="sidebar-title">CATEGORIES</span>
-              </div>
+            <div class="glass-card">
+              <h4 class="sidebar-title">Categories</h4>
               <div class="category-list">
                 <router-link
-                  v-for="(cat, i) in categories"
+                  v-for="cat in categories"
                   :key="cat.id"
                   :to="`/category/${cat.slug}`"
                   class="category-item"
-                  :style="{ '--delay': i * 0.05 + 's' }"
                 >
-                  <span class="cat-idx">{{ String(i + 1).padStart(2, '0') }}</span>
                   <span class="cat-name">{{ cat.name }}</span>
                   <span class="cat-count">{{ cat.articleCount }}</span>
                 </router-link>
@@ -91,18 +66,14 @@
             </div>
 
             <!-- 标签云 -->
-            <div class="glass-card reveal">
-              <div class="card-title-row">
-                <span class="dot dot-pink"></span>
-                <span class="sidebar-title">TAG CLOUD</span>
-              </div>
+            <div class="glass-card">
+              <h4 class="sidebar-title">Tags</h4>
               <div class="tag-cloud">
                 <router-link
                   v-for="tag in tags"
                   :key="tag.id"
                   :to="`/tag/${tag.slug}`"
                   class="tag-link"
-                  :style="{ fontSize: tagSize(tag.articleCount) + 'rem' }"
                 >
                   #{{ tag.name }}
                 </router-link>
@@ -117,7 +88,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import api from '../api'
 import HeroSection from '../components/HeroSection.vue'
 import ArticleCard from '../components/ArticleCard.vue'
@@ -131,33 +102,6 @@ const totalPages = ref(0)
 const totalElements = ref(0)
 const pageSize = ref(10)
 
-const heroStats = computed(() => ({
-  articles: totalElements.value || 0,
-  categories: categories.value.length,
-  tags: tags.value.length,
-  days: Math.max(1, Math.floor((Date.now() - new Date('2024-01-01').getTime()) / 86400000))
-}))
-
-let observer = null
-
-function setupReveal() {
-  const els = document.querySelectorAll('.reveal')
-  observer = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      if (e.isIntersecting) {
-        e.target.classList.add('reveal-in')
-        observer.unobserve(e.target)
-      }
-    })
-  }, { threshold: 0.12 })
-  els.forEach(el => observer.observe(el))
-}
-
-function tagSize(count) {
-  const max = Math.max(...tags.value.map(t => t.articleCount || 1), 1)
-  return 0.78 + (count / max) * 0.5
-}
-
 async function fetchArticles(page = 0) {
   loading.value = true
   try {
@@ -166,8 +110,6 @@ async function fetchArticles(page = 0) {
     totalPages.value = data.totalPages
     totalElements.value = data.totalElements
     pageSize.value = data.size
-    await nextTick()
-    setupReveal()
   } finally {
     loading.value = false
   }
@@ -192,11 +134,6 @@ onMounted(() => {
   fetchArticles()
   fetchCategories()
   fetchTags()
-  nextTick(setupReveal)
-})
-
-onBeforeUnmount(() => {
-  observer && observer.disconnect()
 })
 </script>
 
@@ -207,55 +144,32 @@ onBeforeUnmount(() => {
 
 .container {
   position: relative;
-  max-width: 1240px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 60px 20px 80px;
+  padding: 0 20px 80px;
 }
 
-/* Section head */
-.section-head {
-  margin-bottom: 36px;
-}
-.section-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.72rem;
-  letter-spacing: 4px;
-  color: var(--text-secondary);
-  margin-bottom: 10px;
-}
-.laser {
-  width: 40px;
-  height: 2px;
-  background: linear-gradient(90deg, #818cf8, #ec4899, #22d3ee);
-  background-size: 200% 100%;
-  border-radius: 1px;
-  animation: laserFlow 2s linear infinite;
-}
-@keyframes laserFlow {
-  0% { background-position: 0 0; }
-  100% { background-position: 200% 0; }
-}
-.section-title {
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--text-primary);
-  letter-spacing: -0.01em;
-}
-.grad {
-  background: linear-gradient(120deg, #818cf8, #ec4899);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.article-list {
+  min-height: 200px;
 }
 
-.article-list { min-height: 200px; }
 .pagination-wrapper {
   display: flex;
   justify-content: center;
   margin-top: 28px;
-  padding: 16px 24px;
+}
+
+/* Sidebar */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 84px;
+}
+
+.glass-card {
+  padding: 20px;
   border-radius: 16px;
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
@@ -264,204 +178,102 @@ onBeforeUnmount(() => {
   box-shadow: var(--glass-shadow);
 }
 
-/* Sidebar 玻璃卡片 */
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  position: sticky;
-  top: 90px;
-}
-
-.glass-card {
-  position: relative;
-  padding: 22px;
-  border-radius: 20px;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: var(--glass-blur) var(--glass-saturate);
-  -webkit-backdrop-filter: var(--glass-blur) var(--glass-saturate);
-  box-shadow: var(--glass-shadow);
-  overflow: hidden;
-}
-.glass-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(400px circle at 0% 0%, rgba(129,140,248,0.12), transparent 50%);
-  pointer-events: none;
-}
-
-/* 个人卡片 */
+/* Profile */
 .profile-card {
   text-align: center;
-  padding-top: 28px;
-}
-.profile-glow {
-  position: absolute;
-  inset: -40% -40% auto auto;
-  width: 220px; height: 220px;
-  background: radial-gradient(circle, rgba(236,72,153,0.3), transparent 70%);
-  filter: blur(40px);
-  pointer-events: none;
-}
-.avatar-ring {
-  width: 88px; height: 88px;
-  margin: 0 auto 16px;
-  border-radius: 50%;
-  padding: 3px;
-  background: conic-gradient(from 0deg, #818cf8, #ec4899, #fbbf24, #22d3ee, #818cf8);
-  animation: spin 6s linear infinite;
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
+  padding-top: 24px;
 }
 .avatar {
-  width: 100%; height: 100%;
+  width: 64px; height: 64px;
+  margin: 0 auto 12px;
   border-radius: 50%;
-  background: var(--bg-surface);
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--text-primary);
-  background-image: linear-gradient(135deg, var(--bg-surface), var(--bg-surface-2));
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
 }
 .profile-name {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 4px;
 }
 .profile-bio {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: var(--text-secondary);
-  letter-spacing: 1px;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 .profile-socials {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
 }
 .social {
-  width: 36px; height: 36px;
-  border-radius: 10px;
+  width: 32px; height: 32px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(129,140,248,0.08);
   color: var(--text-secondary);
-  transition: all 0.25s;
+  transition: color 0.2s;
 }
 .social:hover {
-  background: linear-gradient(135deg, #818cf8, #ec4899);
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(129,140,248,0.4);
+  color: #8b5cf6;
 }
 
-/* 卡片标题 */
-.card-title-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-.dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: #818cf8;
-  box-shadow: 0 0 10px #818cf8;
-}
-.dot-pink {
-  background: #ec4899;
-  box-shadow: 0 0 10px #ec4899;
-}
+/* Sidebar title */
 .sidebar-title {
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 3px;
-  color: var(--text-primary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
 }
 
-/* 分类 */
+/* Categories */
 .category-list {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 }
 .category-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 10px;
-  margin: 0 -10px;
-  border-radius: 10px;
+  justify-content: space-between;
+  padding: 8px 0;
   text-decoration: none;
   color: var(--text-primary);
-  transition: all 0.25s;
-  animation: slideIn 0.4s var(--delay,0s) both;
-}
-@keyframes slideIn {
-  from { opacity: 0; transform: translateX(-8px); }
-  to { opacity: 1; transform: translateX(0); }
+  font-size: 0.92rem;
+  transition: color 0.2s;
 }
 .category-item:hover {
-  background: linear-gradient(90deg, rgba(129,140,248,0.1), transparent);
-  transform: translateX(4px);
-}
-.cat-idx {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  opacity: 0.5;
-}
-.cat-name {
-  flex: 1;
-  font-size: 0.95rem;
+  color: #8b5cf6;
 }
 .cat-count {
   font-size: 0.75rem;
   color: var(--text-secondary);
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: rgba(129,140,248,0.1);
 }
 
-/* 标签云 */
+/* Tags */
 .tag-cloud {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 12px;
-  align-items: baseline;
+  gap: 6px;
 }
 .tag-link {
   text-decoration: none;
+  font-size: 0.82rem;
   color: var(--text-secondary);
-  font-weight: 500;
-  transition: all 0.25s;
-  line-height: 1.6;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s;
 }
 .tag-link:hover {
-  color: transparent;
-  background: linear-gradient(120deg, #818cf8, #ec4899);
-  -webkit-background-clip: text;
-  background-clip: text;
-  transform: translateY(-2px);
-}
-
-/* Reveal —— 只做淡入+轻微模糊，避免位移 */
-.reveal {
-  opacity: 0;
-  filter: blur(6px);
-  transition: opacity 0.9s ease, filter 0.9s ease;
-  will-change: opacity, filter;
-}
-.reveal-in {
-  opacity: 1;
-  filter: blur(0);
+  color: #8b5cf6;
+  border-color: #8b5cf6;
 }
 
 @media (max-width: 992px) {
