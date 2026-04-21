@@ -10,7 +10,17 @@
 
     <!-- Hero -->
     <section class="hero">
-      <h1 class="title">yuyudede<span class="dot">.</span></h1>
+      <h1 class="title" :class="{ rainbow: titleRainbow }" @click="playTitle">
+        <span
+          v-for="(ch, i) in titleChars"
+          :key="i"
+          class="char"
+          :class="{ jump: titleJump }"
+          :style="{ '--d': i * 0.04 + 's' }"
+        >{{ ch }}</span><span class="dot" :class="{ pop: titleJump }">.
+          <span class="ripple" v-for="r in ripples" :key="r"></span>
+        </span>
+      </h1>
       <p class="subtitle">左转三次等于右转。记录技术、生活与探索。</p>
     </section>
 
@@ -88,6 +98,35 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+
+const titleChars = 'yuyudede'.split('')
+const titleJump = ref(false)
+const titleRainbow = ref(false)
+const ripples = ref([])
+let rippleId = 0
+
+function playTitle() {
+  // 字母跳动
+  titleJump.value = false
+  titleRainbow.value = false
+  requestAnimationFrame(() => {
+    titleJump.value = true
+    titleRainbow.value = true
+  })
+  // ripple 水波
+  const id = ++rippleId
+  ripples.value.push(id)
+  setTimeout(() => {
+    ripples.value = ripples.value.filter(r => r !== id)
+  }, 900)
+  // 动画结束复位,便于下次重新触发
+  setTimeout(() => {
+    titleJump.value = false
+    titleRainbow.value = false
+  }, 900)
+}
+
 const modules = [
   {
     title: '博客',
@@ -209,12 +248,86 @@ html.dark .orb { mix-blend-mode: screen; opacity: 0.35; }
   line-height: 1;
   margin-bottom: 18px;
   animation: fadeUp 0.8s cubic-bezier(0.2,0.8,0.2,1) both;
+  cursor: pointer;
+  user-select: none;
+  display: inline-block;
+  position: relative;
 }
+.title .char {
+  display: inline-block;
+  transition: color 0.5s ease;
+  will-change: transform;
+}
+.title:hover .char {
+  animation: hoverWave 1.2s ease-in-out infinite;
+  animation-delay: var(--d);
+}
+@keyframes hoverWave {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* 点击:字母依次跳起 + 彩虹渐变 */
+.title .char.jump {
+  animation: charJump 0.7s cubic-bezier(0.3,1.6,0.5,1) both;
+  animation-delay: var(--d);
+}
+@keyframes charJump {
+  0% { transform: translateY(0) scale(1); }
+  40% { transform: translateY(-26px) scale(1.15) rotate(-8deg); }
+  70% { transform: translateY(4px) scale(0.92); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+.title.rainbow .char {
+  background: linear-gradient(90deg, #8b5cf6, #ec4899, #f59e0b, #10b981, #22d3ee, #8b5cf6);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: charJump 0.7s cubic-bezier(0.3,1.6,0.5,1) both, rainbowSlide 1.2s linear;
+  animation-delay: var(--d), 0s;
+}
+@keyframes rainbowSlide {
+  from { background-position: 0 50%; }
+  to { background-position: 300% 50%; }
+}
+
 .title .dot {
+  display: inline-block;
   background: linear-gradient(120deg, #8b5cf6, #ec4899, #f59e0b);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  position: relative;
+  transition: transform 0.3s;
+}
+.title:hover .dot { transform: scale(1.2) rotate(15deg); }
+.title .dot.pop {
+  animation: dotPop 0.7s cubic-bezier(0.3,1.6,0.5,1);
+}
+@keyframes dotPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.6) rotate(-20deg); }
+  100% { transform: scale(1); }
+}
+
+/* 点击时的水波 ripple */
+.ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border-radius: 50%;
+  border: 2px solid rgba(139,92,246,0.6);
+  pointer-events: none;
+  animation: rippleGrow 0.9s ease-out forwards;
+}
+@keyframes rippleGrow {
+  0% { transform: scale(0.3); opacity: 1; }
+  100% { transform: scale(10); opacity: 0; }
 }
 .subtitle {
   font-size: clamp(1rem, 1.4vw, 1.15rem);
