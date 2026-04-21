@@ -322,6 +322,23 @@ html.dark .announce-icon { background: #fff; color: #0f172a; }
               color 0.45s;
   animation: fadeUp 0.6s cubic-bezier(0.2,0.8,0.2,1) both;
 }
+
+/* 默认柔色 tint —— 每张卡不同色调,打破纯白 */
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(120% 80% at 100% 0%, var(--card-tint-a, rgba(139,92,246,0.18)), transparent 60%),
+    radial-gradient(120% 80% at 0% 100%, var(--card-tint-b, rgba(236,72,153,0.14)), transparent 60%);
+  opacity: 0.9;
+  transition: opacity 0.45s cubic-bezier(0.2,0.8,0.2,1);
+  pointer-events: none;
+}
+html.dark .card::after { opacity: 0.7; }
+.card:hover::after { opacity: 0; }
 .card:nth-child(1) { animation-delay: 0.25s; }
 .card:nth-child(2) { animation-delay: 0.32s; }
 .card:nth-child(3) { animation-delay: 0.39s; }
@@ -430,20 +447,36 @@ html.dark .announce-icon { background: #fff; color: #0f172a; }
 }
 
 /* =========================
-   Theme palettes (用于 hover 背景)
+   Theme palettes (用于 hover 背景 + 默认 tint)
 ========================= */
+.theme-aurora {
+  --card-tint-a: rgba(167,139,250,0.22);
+  --card-tint-b: rgba(240,171,252,0.18);
+}
 .theme-aurora .art-a { background: #a78bfa; }
 .theme-aurora .art-b { background: #f0abfc; }
 .theme-aurora .art-c { background: #60a5fa; }
 
+.theme-citrus {
+  --card-tint-a: rgba(253,224,71,0.26);
+  --card-tint-b: rgba(251,146,60,0.2);
+}
 .theme-citrus .art-a { background: #fde047; }
 .theme-citrus .art-b { background: #fb923c; }
 .theme-citrus .art-c { background: #f472b6; }
 
+.theme-violet {
+  --card-tint-a: rgba(129,140,248,0.22);
+  --card-tint-b: rgba(34,211,238,0.18);
+}
 .theme-violet .art-a { background: #818cf8; }
 .theme-violet .art-b { background: #22d3ee; }
 .theme-violet .art-c { background: #c084fc; }
 
+.theme-sunset {
+  --card-tint-a: rgba(252,165,165,0.24);
+  --card-tint-b: rgba(253,186,116,0.2);
+}
 .theme-sunset .art-a { background: #fca5a5; }
 .theme-sunset .art-b { background: #fdba74; }
 .theme-sunset .art-c { background: #a78bfa; }
