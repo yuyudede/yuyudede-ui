@@ -1,20 +1,22 @@
 :root {
-  --primary: #409eff;
+  --primary: #818cf8;
+  --primary-2: #ec4899;
+  --primary-3: #22d3ee;
   --bg-hero: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --text-primary: #303133;
-  --text-secondary: #909399;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
 
-  --bg-page: #f5f7fa;
+  --bg-page: #f7f8fc;
   --bg-surface: #ffffff;
   --bg-surface-2: #fafafa;
-  --border-color: #e4e7ed;
+  --border-color: #e5e7eb;
   --border-soft: #f0f0f0;
   --code-bg: #f6f8fa;
-  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 1px 4px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 10px 40px -10px rgba(79, 70, 229, 0.15);
 
-  --portal-gradient: linear-gradient(120deg, #667eea, #764ba2, #f093fb, #4facfe);
-  --glass-bg: rgba(255, 255, 255, 0.55);
+  --portal-gradient: linear-gradient(120deg, #818cf8, #ec4899, #fbbf24, #22d3ee);
+  --glass-bg: rgba(255, 255, 255, 0.6);
   --glass-border: rgba(255, 255, 255, 0.8);
 }
 
@@ -28,9 +30,9 @@ html.dark {
   --border-soft: #21262d;
   --code-bg: #1c222b;
   --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 10px 40px -10px rgba(129, 140, 248, 0.3);
   --glass-bg: rgba(22, 27, 34, 0.55);
-  --glass-border: rgba(120, 140, 180, 0.25);
+  --glass-border: rgba(120, 140, 180, 0.2);
 }
 
 * {
@@ -39,13 +41,66 @@ html.dark {
   box-sizing: border-box;
 }
 
+html { scroll-behavior: smooth; }
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: var(--text-primary);
   background: var(--bg-page);
   transition: background 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+  position: relative;
 }
 
+/* 页面极光背景层 */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(600px circle at 10% -10%, rgba(129,140,248,0.15), transparent 60%),
+    radial-gradient(700px circle at 100% 20%, rgba(236,72,153,0.1), transparent 60%),
+    radial-gradient(500px circle at 30% 110%, rgba(34,211,238,0.1), transparent 60%);
+  pointer-events: none;
+}
+html.dark body::before {
+  background:
+    radial-gradient(600px circle at 10% -10%, rgba(129,140,248,0.2), transparent 60%),
+    radial-gradient(700px circle at 100% 20%, rgba(236,72,153,0.12), transparent 60%),
+    radial-gradient(500px circle at 30% 110%, rgba(34,211,238,0.12), transparent 60%);
+}
+
+/* 自定义鼠标开启后隐藏默认光标 */
+body.has-custom-cursor,
+body.has-custom-cursor a,
+body.has-custom-cursor button {
+  cursor: none;
+}
+
+/* 滚动条 */
+::-webkit-scrollbar {
+  width: 10px; height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #818cf8, #ec4899);
+  border-radius: 999px;
+  border: 2px solid var(--bg-page);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #6366f1, #db2777);
+}
+
+/* 选中 */
+::selection {
+  background: rgba(129, 140, 248, 0.35);
+  color: inherit;
+}
+
+/* 工具类 */
 .fade-in {
   opacity: 0;
   transform: translateY(20px);
@@ -63,6 +118,13 @@ body {
   opacity: 0;
 }
 
+.gradient-text {
+  background: linear-gradient(120deg, #818cf8, #ec4899);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 @keyframes typing {
   from { width: 0 }
   to { width: 100% }
@@ -76,4 +138,23 @@ body {
   border-right: 3px solid #fff;
   animation: typing 3s steps(30) 1s forwards, blink 0.7s step-end infinite;
   width: 0;
+}
+
+/* Element Plus 风格增强 */
+.el-pagination.is-background .el-pager li.is-active {
+  background: linear-gradient(135deg, #818cf8, #ec4899) !important;
+  color: #fff !important;
+}
+.el-tag {
+  transition: all 0.25s ease;
+}
+
+/* 降级:减少动画用户 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
