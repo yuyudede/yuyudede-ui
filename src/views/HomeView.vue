@@ -205,7 +205,29 @@ onBeforeUnmount(() => {
   position: relative;
 }
 
+/* Hero 到内容的衔接余晖 */
+.home::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 520px;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(900px 380px at 20% 0%, rgba(129,140,248,0.22), transparent 70%),
+    radial-gradient(900px 380px at 85% 8%, rgba(236,72,153,0.18), transparent 70%),
+    radial-gradient(700px 300px at 50% 12%, rgba(34,211,238,0.14), transparent 70%);
+  filter: blur(8px);
+  opacity: 0.9;
+}
+html.dark .home::before {
+  opacity: 0.7;
+}
+
 .container {
+  position: relative;
   max-width: 1240px;
   margin: 0 auto;
   padding: 60px 20px 80px;
@@ -444,15 +466,16 @@ onBeforeUnmount(() => {
   transform: translateY(-2px);
 }
 
-/* Reveal */
+/* Reveal —— 只做淡入+轻微模糊，避免位移 */
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.8s cubic-bezier(0.2,0.8,0.2,1), transform 0.8s cubic-bezier(0.2,0.8,0.2,1);
+  filter: blur(6px);
+  transition: opacity 0.9s ease, filter 0.9s ease;
+  will-change: opacity, filter;
 }
 .reveal-in {
   opacity: 1;
-  transform: translateY(0);
+  filter: blur(0);
 }
 
 @media (max-width: 992px) {

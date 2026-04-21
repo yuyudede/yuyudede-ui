@@ -91,17 +91,13 @@
       <span>SCROLL DOWN</span>
     </div>
 
+    <!-- 底部向下渐隐到页面色,避免硬切 -->
+    <div class="fade-to-page"></div>
+
     <!-- 波浪分隔 -->
     <div class="wave">
       <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="waveGrad" x1="0" x2="1" y1="0" y2="0">
-            <stop offset="0%" stop-color="currentColor" stop-opacity="0.8" />
-            <stop offset="50%" stop-color="currentColor" stop-opacity="1" />
-            <stop offset="100%" stop-color="currentColor" stop-opacity="0.9" />
-          </linearGradient>
-        </defs>
-        <path d="M0,64 C240,120 480,0 720,48 C960,96 1200,32 1440,72 L1440,120 L0,120 Z" fill="url(#waveGrad)">
+        <path d="M0,64 C240,120 480,0 720,48 C960,96 1200,32 1440,72 L1440,120 L0,120 Z" fill="currentColor" opacity="0.9">
           <animate
             attributeName="d"
             dur="10s"
@@ -626,18 +622,36 @@ onBeforeUnmount(() => {
   100% { transform: translateY(10px); opacity: 0; }
 }
 
+/* 底部柔化过渡 */
+.fade-to-page {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 0;
+  height: 280px;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(15, 12, 41, 0.25) 35%,
+    rgba(30, 27, 75, 0.55) 65%,
+    var(--bg-page) 100%
+  );
+}
+
 /* 波浪 */
 .wave {
   position: absolute;
-  bottom: 0; left: 0;
+  bottom: -1px; left: 0;
   width: 100%;
   line-height: 0;
-  z-index: 2;
+  z-index: 3;
   color: var(--bg-page);
 }
 .wave svg {
   width: 100%;
-  height: 100px;
+  height: 120px;
+  display: block;
 }
 
 @keyframes fadeUp {
