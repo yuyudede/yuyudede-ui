@@ -5,10 +5,8 @@
     @click="goToArticle"
     @mousemove="onMove"
     @mouseleave="onLeave"
-    :style="cardStyle"
   >
     <div class="card-glow" :style="glowStyle"></div>
-    <div class="card-border"></div>
 
     <div class="card-inner">
       <div class="card-header">
@@ -63,31 +61,21 @@ const props = defineProps({
 
 const router = useRouter()
 const cardEl = ref(null)
-const state = reactive({ rx: 0, ry: 0, mx: 50, my: 50, hover: false })
+const state = reactive({ mx: 50, my: 50, hover: false })
 
 function onMove(e) {
   const rect = cardEl.value.getBoundingClientRect()
-  const x = e.clientX - rect.left
-  const y = e.clientY - rect.top
-  state.mx = (x / rect.width) * 100
-  state.my = (y / rect.height) * 100
-  state.ry = ((x / rect.width) - 0.5) * 10
-  state.rx = -((y / rect.height) - 0.5) * 10
+  state.mx = ((e.clientX - rect.left) / rect.width) * 100
+  state.my = ((e.clientY - rect.top) / rect.height) * 100
   state.hover = true
 }
 
 function onLeave() {
-  state.rx = 0
-  state.ry = 0
   state.hover = false
 }
 
-const cardStyle = computed(() => ({
-  transform: `perspective(900px) rotateX(${state.rx}deg) rotateY(${state.ry}deg) translateZ(0)`
-}))
-
 const glowStyle = computed(() => ({
-  background: `radial-gradient(circle at ${state.mx}% ${state.my}%, rgba(129,140,248,0.35), transparent 50%)`,
+  background: `radial-gradient(circle at ${state.mx}% ${state.my}%, rgba(129,140,248,0.18), transparent 50%)`,
   opacity: state.hover ? 1 : 0
 }))
 
@@ -105,40 +93,23 @@ function goToArticle() {
   position: relative;
   margin-bottom: 20px;
   cursor: pointer;
-  border-radius: 16px;
-  transform-style: preserve-3d;
-  transition: transform 0.2s cubic-bezier(0.2,0.8,0.2,1);
-  background: var(--bg-surface);
-  box-shadow: var(--shadow-sm);
+  border-radius: 20px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  -webkit-backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  box-shadow: var(--glass-shadow);
   overflow: hidden;
   isolation: isolate;
+  transition: transform 0.35s cubic-bezier(0.2,0.8,0.2,1),
+              box-shadow 0.35s cubic-bezier(0.2,0.8,0.2,1),
+              border-color 0.35s;
 }
 
-.article-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  padding: 1px;
-  border-radius: 16px;
-  background: linear-gradient(120deg,
-    rgba(129,140,248,0) 0%,
-    rgba(129,140,248,0.6) 40%,
-    rgba(236,72,153,0.6) 60%,
-    rgba(34,211,238,0) 100%);
-  background-size: 200% 200%;
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  opacity: 0;
-  transition: opacity 0.4s;
-  animation: borderFlow 4s linear infinite;
-  pointer-events: none;
-  z-index: 2;
-}
-.article-card:hover::before { opacity: 1; }
-@keyframes borderFlow {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
+.article-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 48px -12px rgba(79, 70, 229, 0.15);
+  border-color: rgba(139, 92, 246, 0.25);
 }
 
 .card-glow {
@@ -147,15 +118,6 @@ function goToArticle() {
   transition: opacity 0.4s;
   pointer-events: none;
   z-index: 0;
-}
-
-.card-border {
-  position: absolute;
-  inset: 0;
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  pointer-events: none;
-  z-index: 1;
 }
 
 .card-inner {
@@ -170,7 +132,6 @@ function goToArticle() {
   align-items: flex-start;
   gap: 12px;
   margin-bottom: 12px;
-  transform: translateZ(30px);
 }
 
 .card-title {
@@ -208,7 +169,6 @@ function goToArticle() {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  transform: translateZ(20px);
 }
 
 .card-footer {
@@ -218,7 +178,6 @@ function goToArticle() {
   margin-top: 18px;
   padding-top: 16px;
   border-top: 1px dashed var(--border-soft);
-  transform: translateZ(15px);
   flex-wrap: wrap;
   gap: 8px;
 }

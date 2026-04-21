@@ -205,27 +205,6 @@ onBeforeUnmount(() => {
   position: relative;
 }
 
-/* Hero 到内容的衔接余晖 */
-.home::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 520px;
-  pointer-events: none;
-  z-index: -1;
-  background:
-    radial-gradient(900px 380px at 20% 0%, rgba(129,140,248,0.22), transparent 70%),
-    radial-gradient(900px 380px at 85% 8%, rgba(236,72,153,0.18), transparent 70%),
-    radial-gradient(700px 300px at 50% 12%, rgba(34,211,238,0.14), transparent 70%);
-  filter: blur(8px);
-  opacity: 0.9;
-}
-html.dark .home::before {
-  opacity: 0.7;
-}
-
 .container {
   position: relative;
   max-width: 1240px;
@@ -276,6 +255,13 @@ html.dark .home::before {
   display: flex;
   justify-content: center;
   margin-top: 28px;
+  padding: 16px 24px;
+  border-radius: 16px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  -webkit-backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  box-shadow: var(--glass-shadow);
 }
 
 /* Sidebar 玻璃卡片 */
@@ -290,12 +276,12 @@ html.dark .home::before {
 .glass-card {
   position: relative;
   padding: 22px;
-  border-radius: 18px;
+  border-radius: 20px;
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  box-shadow: var(--shadow-md);
+  backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  -webkit-backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  box-shadow: var(--glass-shadow);
   overflow: hidden;
 }
 .glass-card::before {

@@ -1,7 +1,7 @@
 <template>
   <div class="article-page">
     <div class="container" v-loading="loading">
-      <article v-if="article" class="article-detail">
+      <article v-if="article" class="article-detail glass-container">
         <h1 class="article-title">{{ article.title }}</h1>
         <div class="article-meta">
           <span class="meta-date">{{ formatDate(article.createdAt) }}</span>
@@ -23,13 +23,11 @@
             </router-link>
           </div>
         </div>
-        <el-divider />
+        <div class="divider"></div>
         <div class="article-content" v-html="article.contentHtml"></div>
       </article>
 
-      <el-divider v-if="article" />
-
-      <section v-if="article" class="comments-section">
+      <section v-if="article" class="comments-section glass-container">
         <h3>评论 ({{ comments.length }})</h3>
         <div class="comment-list">
           <div v-for="comment in comments" :key="comment.id" class="comment-item">
@@ -42,7 +40,7 @@
           <el-empty v-if="comments.length === 0" description="暂无评论，快来抢沙发吧！" :image-size="80" />
         </div>
 
-        <el-card class="comment-form-card" shadow="never">
+        <div class="comment-form glass-form">
           <h4>发表评论</h4>
           <el-form
             ref="formRef"
@@ -71,7 +69,7 @@
               </el-button>
             </el-form-item>
           </el-form>
-        </el-card>
+        </div>
       </section>
     </div>
   </div>
@@ -159,6 +157,18 @@ onMounted(() => {
   min-height: 400px;
 }
 
+/* 磨砂容器 */
+.glass-container {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  -webkit-backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: var(--glass-shadow);
+  margin-bottom: 24px;
+}
+
 .article-title {
   font-size: 2rem;
   font-weight: 700;
@@ -188,6 +198,12 @@ onMounted(() => {
   text-decoration: none;
 }
 
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+  margin: 20px 0;
+}
+
 .article-content {
   line-height: 1.8;
   font-size: 1rem;
@@ -203,8 +219,9 @@ onMounted(() => {
 .article-content :deep(pre) {
   background: var(--code-bg);
   padding: 16px;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow-x: auto;
+  border: 1px solid var(--border-soft);
 }
 
 .article-content :deep(code) {
@@ -214,7 +231,7 @@ onMounted(() => {
 
 .article-content :deep(img) {
   max-width: 100%;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 .article-content :deep(blockquote) {
@@ -254,11 +271,15 @@ onMounted(() => {
   line-height: 1.6;
 }
 
-.comment-form-card {
+.glass-form {
   margin-top: 24px;
+  padding: 24px;
+  border-radius: 16px;
+  background: rgba(129, 140, 248, 0.04);
+  border: 1px solid var(--border-soft);
 }
 
-.comment-form-card h4 {
+.glass-form h4 {
   margin-bottom: 16px;
 }
 </style>

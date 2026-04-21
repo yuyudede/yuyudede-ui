@@ -129,22 +129,24 @@ onBeforeUnmount(() => {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: transparent;
-  transition: background 0.4s ease;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  -webkit-backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  border-bottom: 1px solid transparent;
+  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
-.header.scrolled::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--header-scrim, rgba(255,255,255,0.55));
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border-bottom: 1px solid var(--glass-border);
-  pointer-events: none;
-  z-index: -1;
+.header.scrolled {
+  background: rgba(255, 255, 255, 0.72);
+  border-bottom-color: var(--glass-border);
+  box-shadow: 0 1px 12px rgba(15, 23, 42, 0.04);
 }
-html.dark .header.scrolled::before {
-  background: rgba(13, 17, 23, 0.55);
+:global(html.dark) .header {
+  background: rgba(13, 17, 23, 0.5);
+}
+:global(html.dark) .header.scrolled {
+  background: rgba(13, 17, 23, 0.65);
+  border-bottom-color: rgba(120, 140, 180, 0.15);
+  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.2);
 }
 
 .header-inner {
