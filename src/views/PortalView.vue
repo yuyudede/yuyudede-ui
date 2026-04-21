@@ -357,13 +357,20 @@ html.dark .orb { mix-blend-mode: screen; opacity: 0.35; }
   border-radius: 18px;
   text-decoration: none;
   color: var(--text-primary);
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(18px) saturate(150%);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-  box-shadow: var(--shadow-sm);
+  background: #f4f5f7;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 6px 20px -12px rgba(15, 23, 42, 0.08);
   transition: transform 0.3s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.3s, border-color 0.3s;
   animation: fadeUp 0.8s 0.2s cubic-bezier(0.2,0.8,0.2,1) both;
+}
+html.dark .announce {
+  background: rgba(22, 27, 34, 0.7);
+  border-color: rgba(120, 140, 180, 0.18);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.25),
+    0 6px 20px -12px rgba(0, 0, 0, 0.4);
 }
 .announce:hover {
   transform: translateY(-2px);
@@ -419,11 +426,12 @@ html.dark .announce-icon { background: #fff; color: #0f172a; }
   min-height: 260px;
   padding: 22px;
   border-radius: 22px;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(18px) saturate(150%);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-  box-shadow: var(--shadow-sm);
+  /* 改用不透明浅灰底,避免纯白背景下卡片消失 */
+  background: #f4f5f7;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 8px 24px -12px rgba(15, 23, 42, 0.08);
   text-decoration: none;
   color: var(--text-primary);
   overflow: hidden;
@@ -434,6 +442,13 @@ html.dark .announce-icon { background: #fff; color: #0f172a; }
               border-color 0.45s,
               color 0.45s;
   animation: fadeUp 0.6s cubic-bezier(0.2,0.8,0.2,1) both;
+}
+html.dark .card {
+  background: rgba(22, 27, 34, 0.7);
+  border-color: rgba(120, 140, 180, 0.18);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.25),
+    0 8px 24px -12px rgba(0, 0, 0, 0.4);
 }
 
 /* 默认柔色 tint —— 每张卡不同色调,打破纯白 */
