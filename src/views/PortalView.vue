@@ -329,7 +329,6 @@ html.dark .announce-icon { background: #fff; color: #0f172a; }
 
 .card.inactive {
   cursor: not-allowed;
-  opacity: 0.85;
 }
 
 /* hover 时露出的"图片" */
@@ -366,17 +365,21 @@ html.dark .announce-icon { background: #fff; color: #0f172a; }
   50% { transform: translate(20px,-15px) scale(1.12); }
 }
 
-.card:not(.inactive):hover {
+.card:hover {
   transform: translateY(-4px);
   box-shadow: 0 24px 60px -20px rgba(15,23,42,0.25);
   color: #fff;
   border-color: transparent;
 }
-.card:not(.inactive):hover .card-art {
+.card:hover .card-art {
   opacity: 1;
   transform: scale(1);
 }
-.card:not(.inactive):hover .card-desc { color: rgba(255,255,255,0.85); }
+.card:hover .card-desc { color: rgba(255,255,255,0.85); }
+.card.inactive:hover .status-dot {
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(255,255,255,0.2);
+}
 
 .card-inner {
   position: relative;
