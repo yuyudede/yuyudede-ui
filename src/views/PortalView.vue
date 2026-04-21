@@ -357,11 +357,11 @@ html.dark .orb { mix-blend-mode: screen; opacity: 0.35; }
   border-radius: 18px;
   text-decoration: none;
   color: var(--text-primary);
-  background: #f4f5f7;
-  border: 1px solid rgba(15, 23, 42, 0.06);
+  background: #eef0f4;
+  border: 1px solid rgba(15, 23, 42, 0.08);
   box-shadow:
-    0 1px 2px rgba(15, 23, 42, 0.04),
-    0 6px 20px -12px rgba(15, 23, 42, 0.08);
+    0 1px 3px rgba(15, 23, 42, 0.06),
+    0 6px 20px -8px rgba(15, 23, 42, 0.1);
   transition: transform 0.3s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.3s, border-color 0.3s;
   animation: fadeUp 0.8s 0.2s cubic-bezier(0.2,0.8,0.2,1) both;
 }
@@ -426,12 +426,11 @@ html.dark .announce-icon { background: #fff; color: #0f172a; }
   min-height: 260px;
   padding: 22px;
   border-radius: 22px;
-  /* 改用不透明浅灰底,避免纯白背景下卡片消失 */
-  background: #f4f5f7;
-  border: 1px solid rgba(15, 23, 42, 0.06);
+  background: #eef0f4;
+  border: 1px solid rgba(15, 23, 42, 0.08);
   box-shadow:
-    0 1px 2px rgba(15, 23, 42, 0.04),
-    0 8px 24px -12px rgba(15, 23, 42, 0.08);
+    0 1px 3px rgba(15, 23, 42, 0.06),
+    0 8px 28px -8px rgba(15, 23, 42, 0.12);
   text-decoration: none;
   color: var(--text-primary);
   overflow: hidden;
@@ -491,12 +490,13 @@ html.dark .card::after { opacity: 0.45; }
 .art-blur {
   position: absolute;
   border-radius: 50%;
-  filter: blur(28px);
+  filter: blur(24px);
+  opacity: 0.85;
   animation: artFloat 8s ease-in-out infinite;
 }
-.art-a { width: 80%; height: 80%; top: -15%; left: -15%; }
-.art-b { width: 70%; height: 70%; top: 20%; right: -20%; animation-delay: -3s; }
-.art-c { width: 60%; height: 60%; bottom: -20%; left: 20%; animation-delay: -5s; }
+.art-a { width: 90%; height: 90%; top: -20%; left: -20%; }
+.art-b { width: 80%; height: 80%; top: 15%; right: -25%; animation-delay: -3s; }
+.art-c { width: 70%; height: 70%; bottom: -25%; left: 15%; animation-delay: -5s; }
 .art-grain {
   position: absolute;
   inset: 0;
@@ -511,8 +511,8 @@ html.dark .card::after { opacity: 0.45; }
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 24px 60px -20px rgba(15,23,42,0.25);
+  transform: translateY(-6px);
+  box-shadow: 0 28px 64px -16px rgba(15,23,42,0.3);
   color: #fff;
   border-color: transparent;
 }
