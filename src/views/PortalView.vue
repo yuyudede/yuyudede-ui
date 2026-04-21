@@ -459,13 +459,13 @@ html.dark .card {
   z-index: 0;
   border-radius: inherit;
   background:
-    radial-gradient(120% 80% at 100% 0%, var(--card-tint-a, rgba(139,92,246,0.18)), transparent 60%),
-    radial-gradient(120% 80% at 0% 100%, var(--card-tint-b, rgba(236,72,153,0.14)), transparent 60%);
-  opacity: 0.9;
+    radial-gradient(120% 80% at 100% 0%, var(--card-tint-a, rgba(139,92,246,0.06)), transparent 60%),
+    radial-gradient(120% 80% at 0% 100%, var(--card-tint-b, rgba(236,72,153,0.04)), transparent 60%);
+  opacity: 0.6;
   transition: opacity 0.45s cubic-bezier(0.2,0.8,0.2,1);
   pointer-events: none;
 }
-html.dark .card::after { opacity: 0.7; }
+html.dark .card::after { opacity: 0.45; }
 .card:hover::after { opacity: 0; }
 .card:nth-child(1) { animation-delay: 0.25s; }
 .card:nth-child(2) { animation-delay: 0.32s; }
@@ -578,32 +578,32 @@ html.dark .card::after { opacity: 0.7; }
    Theme palettes (用于 hover 背景 + 默认 tint)
 ========================= */
 .theme-aurora {
-  --card-tint-a: rgba(167,139,250,0.22);
-  --card-tint-b: rgba(240,171,252,0.18);
+  --card-tint-a: rgba(167,139,250,0.08);
+  --card-tint-b: rgba(240,171,252,0.06);
 }
 .theme-aurora .art-a { background: #a78bfa; }
 .theme-aurora .art-b { background: #f0abfc; }
 .theme-aurora .art-c { background: #60a5fa; }
 
 .theme-citrus {
-  --card-tint-a: rgba(253,224,71,0.26);
-  --card-tint-b: rgba(251,146,60,0.2);
+  --card-tint-a: rgba(253,224,71,0.09);
+  --card-tint-b: rgba(251,146,60,0.06);
 }
 .theme-citrus .art-a { background: #fde047; }
 .theme-citrus .art-b { background: #fb923c; }
 .theme-citrus .art-c { background: #f472b6; }
 
 .theme-violet {
-  --card-tint-a: rgba(129,140,248,0.22);
-  --card-tint-b: rgba(34,211,238,0.18);
+  --card-tint-a: rgba(129,140,248,0.08);
+  --card-tint-b: rgba(34,211,238,0.06);
 }
 .theme-violet .art-a { background: #818cf8; }
 .theme-violet .art-b { background: #22d3ee; }
 .theme-violet .art-c { background: #c084fc; }
 
 .theme-sunset {
-  --card-tint-a: rgba(252,165,165,0.24);
-  --card-tint-b: rgba(253,186,116,0.2);
+  --card-tint-a: rgba(252,165,165,0.08);
+  --card-tint-b: rgba(253,186,116,0.06);
 }
 .theme-sunset .art-a { background: #fca5a5; }
 .theme-sunset .art-b { background: #fdba74; }
