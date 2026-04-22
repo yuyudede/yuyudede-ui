@@ -1,84 +1,114 @@
 <template>
   <div class="article-page">
-    <div class="container" v-loading="loading">
-      <article v-if="article" class="article-detail glass-container">
-        <h1 class="article-title">{{ article.title }}</h1>
-        <div class="article-meta">
-          <span class="meta-date">{{ formatDate(article.createdAt) }}</span>
-          <router-link
-            v-if="article.category"
-            :to="`/category/${article.category.slug}`"
-            class="meta-category"
-          >
-            <el-tag type="primary" size="small">{{ article.category.name }}</el-tag>
-          </router-link>
-          <div class="meta-tags">
-            <router-link
-              v-for="tag in article.tagNames"
-              :key="tag"
-              :to="`/tag/${tag}`"
-              class="tag-link"
+    <div class="article-layout" v-loading="loading">
+      <!-- TOC 侧边栏 -->
+      <aside v-if="tocItems.length > 0" class="toc-sidebar">
+        <div class="toc-card glass-card">
+          <h4 class="toc-title">目录</h4>
+          <nav class="toc-nav">
+            <a
+              v-for="item in tocItems"
+              :key="item.id"
+              :href="`#${item.id}`"
+              :class="['toc-link', `toc-h${item.level}`, { active: activeId === item.id }]"
+              @click.prevent="scrollToHeading(item.id)"
             >
-              <el-tag size="small" type="info" effect="plain">{{ tag }}</el-tag>
+              {{ item.text }}
+            </a>
+          </nav>
+        </div>
+      </aside>
+
+      <!-- 文章主体 -->
+      <div class="article-main">
+        <article v-if="article" class="article-detail glass-container">
+          <h1 class="article-title">{{ article.title }}</h1>
+          <div class="article-meta">
+            <span class="meta-date">{{ formatDate(article.createdAt) }}</span>
+            <span v-if="article.readingMinutes" class="meta-reading">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+              {{ article.readingMinutes }} 分钟阅读
+            </span>
+            <router-link
+              v-if="article.category"
+              :to="`/category/${article.category.slug}`"
+              class="meta-category"
+            >
+              <el-tag type="primary" size="small">{{ article.category.name }}</el-tag>
             </router-link>
-          </div>
-        </div>
-        <div class="divider"></div>
-        <div class="article-content" v-html="article.contentHtml"></div>
-      </article>
-
-      <section v-if="article" class="comments-section glass-container">
-        <h3>评论 ({{ comments.length }})</h3>
-        <div class="comment-list">
-          <div v-for="comment in comments" :key="comment.id" class="comment-item">
-            <div class="comment-header">
-              <strong>{{ comment.nickname }}</strong>
-              <span class="comment-date">{{ formatDate(comment.createdAt) }}</span>
+            <div class="meta-tags">
+              <router-link
+                v-for="tag in article.tagNames"
+                :key="tag"
+                :to="`/tag/${tag}`"
+                class="tag-link"
+              >
+                <el-tag size="small" type="info" effect="plain">{{ tag }}</el-tag>
+              </router-link>
             </div>
-            <p class="comment-content">{{ comment.content }}</p>
           </div>
-          <el-empty v-if="comments.length === 0" description="暂无评论，快来抢沙发吧！" :image-size="80" />
-        </div>
+          <div class="divider"></div>
+          <div ref="contentRef" class="article-content" v-html="article.contentHtml"></div>
+        </article>
 
-        <div class="comment-form glass-form">
-          <h4>发表评论</h4>
-          <el-form
-            ref="formRef"
-            :model="commentForm"
-            :rules="commentRules"
-            label-width="60px"
-            @submit.prevent="submitComment"
-          >
-            <el-form-item label="昵称" prop="nickname">
-              <el-input v-model="commentForm.nickname" placeholder="请输入昵称" />
-            </el-form-item>
-            <el-form-item label="邮箱" prop="email">
-              <el-input v-model="commentForm.email" placeholder="请输入邮箱" />
-            </el-form-item>
-            <el-form-item label="内容" prop="content">
-              <el-input
-                v-model="commentForm.content"
-                type="textarea"
-                :rows="4"
-                placeholder="请输入评论内容"
-              />
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" :loading="submitting" @click="submitComment">
-                提交评论
-              </el-button>
-            </el-form-item>
-          </el-form>
-        </div>
-      </section>
+        <section v-if="article" class="comments-section glass-container">
+          <h3>评论 ({{ comments.length }})</h3>
+          <div class="comment-list">
+            <div v-for="comment in comments" :key="comment.id" class="comment-item">
+              <div class="comment-header">
+                <strong>{{ comment.nickname }}</strong>
+                <span class="comment-date">{{ formatDate(comment.createdAt) }}</span>
+              </div>
+              <p class="comment-content">{{ comment.content }}</p>
+            </div>
+            <el-empty v-if="comments.length === 0" description="暂无评论，快来抢沙发吧！" :image-size="80" />
+          </div>
+
+          <div class="comment-form glass-form">
+            <h4>发表评论</h4>
+            <el-form
+              ref="formRef"
+              :model="commentForm"
+              :rules="commentRules"
+              label-width="60px"
+              @submit.prevent="submitComment"
+            >
+              <el-form-item label="昵称" prop="nickname">
+                <el-input v-model="commentForm.nickname" placeholder="请输入昵称" />
+              </el-form-item>
+              <el-form-item label="邮箱" prop="email">
+                <el-input v-model="commentForm.email" placeholder="请输入邮箱" />
+              </el-form-item>
+              <el-form-item label="内容" prop="content">
+                <el-input
+                  v-model="commentForm.content"
+                  type="textarea"
+                  :rows="4"
+                  placeholder="请输入评论内容"
+                />
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" :loading="submitting" @click="submitComment">
+                  提交评论
+                </el-button>
+              </el-form-item>
+            </el-form>
+          </div>
+        </section>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useHead } from '@unhead/vue'
 import { ElMessage } from 'element-plus'
+import hljs from 'highlight.js'
+import 'highlight.js/styles/github-dark.css'
 import api from '../api'
 
 const route = useRoute()
@@ -87,6 +117,9 @@ const comments = ref([])
 const loading = ref(false)
 const submitting = ref(false)
 const formRef = ref(null)
+const contentRef = ref(null)
+const tocItems = ref([])
+const activeId = ref('')
 
 const commentForm = ref({
   nickname: '',
@@ -103,6 +136,21 @@ const commentRules = {
   content: [{ required: true, message: '请输入评论内容', trigger: 'blur' }],
 }
 
+// SEO head
+useHead({
+  title: () => article.value ? `${article.value.title} - yuyudede` : 'yuyudede',
+  meta: () => {
+    if (!article.value) return []
+    return [
+      { name: 'description', content: article.value.summary || article.value.title },
+      { property: 'og:title', content: article.value.title },
+      { property: 'og:description', content: article.value.summary || '' },
+      { property: 'og:type', content: 'article' },
+      { property: 'og:url', content: `https://yuyudede.com/article/${article.value.slug}` },
+    ]
+  },
+})
+
 function formatDate(dateStr) {
   return new Date(dateStr).toLocaleDateString('zh-CN')
 }
@@ -112,6 +160,10 @@ async function fetchArticle() {
   try {
     const { data } = await api.get(`/articles/${route.params.slug}`)
     article.value = data
+    await nextTick()
+    highlightCode()
+    extractToc()
+    observeHeadings()
   } finally {
     loading.value = false
   }
@@ -120,6 +172,77 @@ async function fetchArticle() {
 async function fetchComments() {
   const { data } = await api.get(`/articles/${route.params.slug}/comments`)
   comments.value = data
+}
+
+function highlightCode() {
+  if (!contentRef.value) return
+  const blocks = contentRef.value.querySelectorAll('pre code')
+  blocks.forEach((block) => {
+    hljs.highlightElement(block)
+    // 添加复制按钮
+    const pre = block.parentElement
+    if (pre.querySelector('.copy-btn')) return
+    pre.style.position = 'relative'
+    const btn = document.createElement('button')
+    btn.className = 'copy-btn'
+    btn.textContent = '复制'
+    btn.addEventListener('click', () => {
+      navigator.clipboard.writeText(block.textContent).then(() => {
+        btn.textContent = '已复制'
+        btn.classList.add('copied')
+        setTimeout(() => {
+          btn.textContent = '复制'
+          btn.classList.remove('copied')
+        }, 2000)
+      })
+    })
+    pre.appendChild(btn)
+  })
+}
+
+function extractToc() {
+  if (!contentRef.value) return
+  const headings = contentRef.value.querySelectorAll('h1, h2, h3')
+  tocItems.value = Array.from(headings).map((h) => ({
+    id: h.id || h.textContent.trim().toLowerCase().replace(/\s+/g, '-'),
+    text: h.textContent.trim(),
+    level: parseInt(h.tagName[1]),
+  }))
+  // 确保每个标题都有 id
+  headings.forEach((h, i) => {
+    if (!h.id) {
+      h.id = tocItems.value[i].id
+    }
+  })
+}
+
+let observer = null
+function observeHeadings() {
+  if (observer) observer.disconnect()
+  if (!contentRef.value) return
+  const headings = contentRef.value.querySelectorAll('h1[id], h2[id], h3[id]')
+  if (headings.length === 0) return
+
+  observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          activeId.value = entry.target.id
+          break
+        }
+      }
+    },
+    { rootMargin: '-80px 0px -60% 0px', threshold: 0 }
+  )
+  headings.forEach((h) => observer.observe(h))
+}
+
+function scrollToHeading(id) {
+  const el = document.getElementById(id)
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    activeId.value = id
+  }
 }
 
 async function submitComment() {
@@ -143,6 +266,10 @@ onMounted(() => {
   fetchArticle()
   fetchComments()
 })
+
+onBeforeUnmount(() => {
+  if (observer) observer.disconnect()
+})
 </script>
 
 <style scoped>
@@ -150,12 +277,73 @@ onMounted(() => {
   padding: 32px 0;
 }
 
-.container {
-  max-width: 800px;
+.article-layout {
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
-  min-height: 400px;
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
 }
+
+.article-main {
+  flex: 1;
+  max-width: 800px;
+  min-width: 0;
+}
+
+/* TOC 侧边栏 */
+.toc-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 84px;
+  order: 1;
+}
+.toc-card {
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  -webkit-backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  box-shadow: var(--glass-shadow);
+}
+.toc-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+.toc-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
+}
+.toc-link {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border-left: 2px solid transparent;
+  transition: all 0.2s;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.toc-link:hover {
+  color: var(--primary);
+}
+.toc-link.active {
+  color: var(--primary);
+  border-left-color: var(--primary);
+  background: rgba(129, 140, 248, 0.08);
+}
+.toc-h2 { padding-left: 8px; }
+.toc-h3 { padding-left: 20px; font-size: 0.78rem; }
 
 /* 磨砂容器 */
 .glass-container {
@@ -183,6 +371,12 @@ onMounted(() => {
   flex-wrap: wrap;
   color: var(--text-secondary);
   font-size: 0.9rem;
+}
+
+.meta-reading {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .meta-category {
@@ -222,6 +416,7 @@ onMounted(() => {
   border-radius: 12px;
   overflow-x: auto;
   border: 1px solid var(--border-soft);
+  position: relative;
 }
 
 .article-content :deep(code) {
@@ -239,6 +434,31 @@ onMounted(() => {
   padding-left: 16px;
   color: var(--text-secondary);
   margin: 16px 0;
+}
+
+/* 复制按钮 */
+.article-content :deep(.copy-btn) {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  color: #a0aec0;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(4px);
+  z-index: 1;
+}
+.article-content :deep(.copy-btn:hover) {
+  color: #fff;
+  background: rgba(129, 140, 248, 0.4);
+}
+.article-content :deep(.copy-btn.copied) {
+  color: #68d391;
+  border-color: #68d391;
 }
 
 .comments-section h3 {
@@ -281,5 +501,14 @@ onMounted(() => {
 
 .glass-form h4 {
   margin-bottom: 16px;
+}
+
+@media (max-width: 1024px) {
+  .toc-sidebar {
+    display: none;
+  }
+  .article-layout {
+    max-width: 800px;
+  }
 }
 </style>

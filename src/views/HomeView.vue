@@ -89,9 +89,20 @@
 
 <script setup>
 import { ref, onMounted, nextTick } from 'vue'
+import { useHead } from '@unhead/vue'
 import api from '../api'
 import HeroSection from '../components/HeroSection.vue'
 import ArticleCard from '../components/ArticleCard.vue'
+
+useHead({
+  title: '博客 - yuyudede',
+  meta: [
+    { name: 'description', content: 'yuyudede 的个人博客，记录技术与生活' },
+    { property: 'og:title', content: 'yuyudede 博客' },
+    { property: 'og:description', content: 'yuyudede 的个人博客' },
+    { property: 'og:url', content: 'https://yuyudede.com/blog' },
+  ],
+})
 
 const articles = ref([])
 const categories = ref([])

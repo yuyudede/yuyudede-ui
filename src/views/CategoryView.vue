@@ -28,10 +28,19 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useHead } from '@unhead/vue'
 import api from '../api'
 import ArticleCard from '../components/ArticleCard.vue'
 
 const route = useRoute()
+
+useHead({
+  title: () => `分类: ${route.params.slug} - yuyudede`,
+  meta: () => [
+    { name: 'description', content: `分类 ${route.params.slug} 下的文章` },
+    { property: 'og:title', content: `分类: ${route.params.slug}` },
+  ],
+})
 const articles = ref([])
 const loading = ref(false)
 const currentPage = ref(1)

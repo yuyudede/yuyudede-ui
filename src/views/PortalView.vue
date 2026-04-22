@@ -99,6 +99,18 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useHead } from '@unhead/vue'
+
+useHead({
+  title: 'yuyudede',
+  meta: [
+    { name: 'description', content: '执业兽医 · 程序员 · 唯物主义战士' },
+    { property: 'og:title', content: 'yuyudede' },
+    { property: 'og:description', content: '执业兽医 · 程序员 · 唯物主义战士' },
+    { property: 'og:url', content: 'https://yuyudede.com' },
+    { property: 'og:type', content: 'website' },
+  ],
+})
 
 const titleChars = 'yuyudede'.split('')
 const titleJump = ref(false)
