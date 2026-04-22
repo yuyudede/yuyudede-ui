@@ -33,7 +33,7 @@
                 <span>Y</span>
               </div>
               <h3 class="profile-name">yuyudede</h3>
-              <p class="profile-bio">Full-Stack Developer · Life Explorer</p>
+              <p class="profile-bio">执业兽医 · 程序员 · 唯物主义战士</p>
               <div class="profile-socials">
                 <a href="#" class="social">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
