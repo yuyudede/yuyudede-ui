@@ -159,6 +159,11 @@ function goToArticle() {
   border: none !important;
   color: #fff !important;
   flex-shrink: 0;
+  transition: opacity 0.25s;
+}
+.article-card:hover .cat-tag {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .card-summary {
