@@ -44,6 +44,7 @@ const menuItems = [
 
 const activeMenu = computed(() => {
   if (route.path.startsWith('/admin/comments')) return '/admin/comments'
+  if (route.path.startsWith('/admin/categories')) return '/admin/categories'
   return '/admin/articles'
 })
 </script>
