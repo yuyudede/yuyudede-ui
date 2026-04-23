@@ -32,12 +32,13 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { Document, ChatDotRound, Back } from '@element-plus/icons-vue'
+import { Document, ChatDotRound, Back, Collection } from '@element-plus/icons-vue'
 
 const route = useRoute()
 
 const menuItems = [
   { path: '/admin/articles', label: '文章管理', icon: Document },
+  { path: '/admin/categories', label: '分类管理', icon: Collection },
   { path: '/admin/comments', label: '评论管理', icon: ChatDotRound },
 ]
 

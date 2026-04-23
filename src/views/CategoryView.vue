@@ -1,7 +1,15 @@
 <template>
   <div class="category-page">
     <div class="container">
-      <h2 class="page-title">分类: {{ route.params.slug }}</h2>
+      <div class="page-header">
+        <router-link to="/categories" class="back-link">← 全部分类</router-link>
+        <h2 class="page-title">
+          <span class="cat-name">{{ categoryName || route.params.slug }}</span>
+          <span v-if="categoryDesc" class="cat-desc">{{ categoryDesc }}</span>
+        </h2>
+        <span class="article-count">{{ totalElements }} 篇文章</span>
+      </div>
+
       <div v-loading="loading" class="article-list">
         <ArticleCard
           v-for="article in articles"
@@ -10,9 +18,9 @@
         />
         <el-empty v-if="!loading && articles.length === 0" description="该分类下暂无文章" />
       </div>
-      <div class="pagination-wrapper">
+
+      <div class="pagination-wrapper" v-if="totalPages > 1">
         <el-pagination
-          v-if="totalPages > 1"
           background
           layout="prev, pager, next"
           :total="totalElements"
@@ -34,19 +42,35 @@ import ArticleCard from '../components/ArticleCard.vue'
 
 const route = useRoute()
 
-useHead({
-  title: () => `分类: ${route.params.slug} - yuyudede`,
-  meta: () => [
-    { name: 'description', content: `分类 ${route.params.slug} 下的文章` },
-    { property: 'og:title', content: `分类: ${route.params.slug}` },
-  ],
-})
 const articles = ref([])
 const loading = ref(false)
 const currentPage = ref(1)
 const totalPages = ref(0)
 const totalElements = ref(0)
 const pageSize = ref(10)
+const categoryName = ref('')
+const categoryDesc = ref('')
+
+useHead({
+  title: () => `${categoryName.value || route.params.slug} - yuyudede`,
+  meta: () => [
+    { name: 'description', content: `${categoryName.value || route.params.slug} 分类下的文章` },
+    { property: 'og:title', content: categoryName.value || route.params.slug },
+  ],
+})
+
+async function fetchCategoryInfo() {
+  try {
+    const { data } = await api.get('/categories')
+    const cat = data.find(c => c.slug === route.params.slug)
+    if (cat) {
+      categoryName.value = cat.name
+      categoryDesc.value = cat.description || ''
+    }
+  } catch {
+    // ignore
+  }
+}
 
 async function fetchArticles(page = 0) {
   loading.value = true
@@ -70,10 +94,16 @@ function handlePageChange(page) {
 
 watch(() => route.params.slug, () => {
   currentPage.value = 1
+  categoryName.value = ''
+  categoryDesc.value = ''
+  fetchCategoryInfo()
   fetchArticles()
 })
 
-onMounted(() => fetchArticles())
+onMounted(() => {
+  fetchCategoryInfo()
+  fetchArticles()
+})
 </script>
 
 <style scoped>
@@ -87,10 +117,48 @@ onMounted(() => fetchArticles())
   padding: 0 20px;
 }
 
+.page-header {
+  margin-bottom: 32px;
+}
+
+.back-link {
+  display: inline-block;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  margin-bottom: 12px;
+  transition: color 0.2s;
+}
+.back-link:hover {
+  color: var(--primary);
+}
+
 .page-title {
   font-size: 1.8rem;
   font-weight: 700;
-  margin-bottom: 24px;
+  line-height: 1.3;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cat-name {
+  background: linear-gradient(120deg, #8b5cf6, #ec4899);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.cat-desc {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.article-count {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
 }
 
 .article-list {
@@ -100,6 +168,6 @@ onMounted(() => fetchArticles())
 .pagination-wrapper {
   display: flex;
   justify-content: center;
-  margin-top: 24px;
+  margin-top: 32px;
 }
 </style>
