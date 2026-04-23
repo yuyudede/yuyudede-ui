@@ -1,31 +1,32 @@
 <template>
-  <el-container class="admin-layout">
-    <el-aside width="200px" class="admin-aside">
-      <div class="admin-logo">管理后台</div>
-      <el-menu
-        :default-active="activeMenu"
-        router
-        class="admin-menu"
-      >
-        <el-menu-item index="/admin/articles">
-          <el-icon><Document /></el-icon>
-          <span>文章管理</span>
-        </el-menu-item>
-        <el-menu-item index="/admin/comments">
-          <el-icon><ChatDotRound /></el-icon>
-          <span>评论管理</span>
-        </el-menu-item>
-      </el-menu>
-      <el-divider />
+  <div class="admin-layout">
+    <aside class="admin-aside">
+      <div class="admin-brand">
+        <span class="brand-dot"></span>
+        <span class="brand-name">管理后台</span>
+      </div>
+      <nav class="admin-nav">
+        <router-link
+          v-for="item in menuItems"
+          :key="item.path"
+          :to="item.path"
+          class="nav-item"
+          :class="{ active: activeMenu === item.path }"
+        >
+          <component :is="item.icon" class="nav-icon" />
+          <span>{{ item.label }}</span>
+        </router-link>
+      </nav>
+      <div class="admin-divider"></div>
       <router-link to="/" class="back-link">
-        <el-icon><Back /></el-icon>
+        <Back class="nav-icon" />
         <span>返回前台</span>
       </router-link>
-    </el-aside>
-    <el-main class="admin-main">
+    </aside>
+    <main class="admin-main">
       <router-view />
-    </el-main>
-  </el-container>
+    </main>
+  </div>
 </template>
 
 <script setup>
@@ -35,6 +36,11 @@ import { Document, ChatDotRound, Back } from '@element-plus/icons-vue'
 
 const route = useRoute()
 
+const menuItems = [
+  { path: '/admin/articles', label: '文章管理', icon: Document },
+  { path: '/admin/comments', label: '评论管理', icon: ChatDotRound },
+]
+
 const activeMenu = computed(() => {
   if (route.path.startsWith('/admin/comments')) return '/admin/comments'
   return '/admin/articles'
@@ -43,45 +49,117 @@ const activeMenu = computed(() => {
 
 <style scoped>
 .admin-layout {
-  min-height: calc(100vh - 120px);
+  display: flex;
+  min-height: calc(100vh - 64px);
 }
 
+/* 侧边栏 - 玻璃拟态风格 */
 .admin-aside {
-  background: var(--bg-surface);
-  border-right: 1px solid var(--border-color);
-  padding-top: 16px;
+  width: 220px;
+  flex-shrink: 0;
+  padding: 24px 16px;
+  background: var(--glass-bg);
+  border-right: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  -webkit-backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  display: flex;
+  flex-direction: column;
 }
 
-.admin-logo {
-  text-align: center;
-  font-size: 1.2rem;
+.admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px 20px;
+}
+.brand-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8b5cf6, #ec4899 60%, #f59e0b);
+  box-shadow: 0 0 12px rgba(139,92,246,0.45);
+}
+.brand-name {
+  font-size: 1.1rem;
   font-weight: 700;
-  color: var(--primary);
-  margin-bottom: 20px;
-  padding: 0 20px;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
 }
 
-.admin-menu {
-  border-right: none;
+/* 自定义导航 */
+.admin-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.25s;
+}
+.nav-item:hover {
+  color: var(--text-primary);
+  background: rgba(139, 92, 246, 0.08);
+}
+.nav-item.active {
+  color: #fff;
+  background: linear-gradient(135deg, #818cf8, #ec4899);
+  box-shadow: 0 4px 16px -4px rgba(129, 140, 248, 0.4);
+}
+.nav-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.admin-divider {
+  height: 1px;
+  background: var(--border-soft);
+  margin: 16px 12px;
 }
 
 .back-link {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 20px;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
   color: var(--text-secondary);
   text-decoration: none;
-  font-size: 14px;
-  transition: color 0.2s;
+  font-size: 0.9rem;
+  transition: all 0.25s;
 }
-
 .back-link:hover {
-  color: var(--primary);
+  color: var(--text-primary);
+  background: rgba(139, 92, 246, 0.08);
 }
 
 .admin-main {
+  flex: 1;
+  padding: 32px;
   background: var(--bg-page);
-  padding: 24px;
+  overflow: auto;
+}
+
+@media (max-width: 768px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+  .admin-aside {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    padding: 12px 16px;
+  }
+  .admin-brand { padding: 0; margin-right: 16px; }
+  .admin-nav { flex-direction: row; flex: 1; }
+  .admin-divider { display: none; }
+  .back-link { margin-left: auto; }
+  .admin-main { padding: 20px; }
 }
 </style>
