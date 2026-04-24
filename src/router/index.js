@@ -23,6 +23,7 @@ const routes = [
       { path: 'categories', name: 'AdminCategories', component: () => import('../views/admin/CategoryListView.vue') },
       { path: 'categories/new', name: 'AdminCategoryNew', component: () => import('../views/admin/CategoryFormView.vue') },
       { path: 'categories/edit/:id', name: 'AdminCategoryEdit', component: () => import('../views/admin/CategoryFormView.vue') },
+      { path: 'stats', name: 'AdminStats', component: () => import('../views/admin/StatsView.vue') },
     ],
   },
 ]
