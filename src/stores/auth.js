@@ -2,11 +2,25 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import api from '../api'
 
+function parseJwtExp(tokenStr) {
+  if (!tokenStr) return null
+  try {
+    const payload = JSON.parse(atob(tokenStr.split('.')[1]))
+    return payload.exp ? payload.exp * 1000 : null
+  } catch {
+    return null
+  }
+}
+
 export const useAuthStore = defineStore('auth', () => {
   const token = ref(localStorage.getItem('token') || '')
   const username = ref(localStorage.getItem('username') || '')
 
-  const isAuthenticated = computed(() => !!token.value)
+  const isAuthenticated = computed(() => {
+    if (!token.value) return false
+    const exp = parseJwtExp(token.value)
+    return exp ? Date.now() < exp : false
+  })
 
   async function login(user, pass) {
     const { data } = await api.post('/auth/login', { username: user, password: pass })
