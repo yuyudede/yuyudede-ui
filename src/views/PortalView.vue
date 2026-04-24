@@ -438,13 +438,13 @@ html.dark .announce-icon { background: #fff; color: #0f172a; }
   min-height: 260px;
   padding: 22px;
   border-radius: 22px;
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(20px) saturate(1.4);
-  -webkit-backdrop-filter: blur(20px) saturate(1.4);
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   box-shadow:
-    0 1px 3px rgba(15, 23, 42, 0.06),
-    0 10px 32px -8px rgba(15, 23, 42, 0.14);
+    0 1px 2px rgba(15, 23, 42, 0.03),
+    0 8px 24px -10px rgba(15, 23, 42, 0.08);
   text-decoration: none;
   color: var(--text-primary);
   overflow: hidden;
@@ -452,19 +452,19 @@ html.dark .announce-icon { background: #fff; color: #0f172a; }
   cursor: pointer;
   transition: transform 0.45s cubic-bezier(0.2,0.8,0.2,1),
               box-shadow 0.45s cubic-bezier(0.2,0.8,0.2,1),
-              border-color 0.45s,
-              color 0.45s;
+              background 0.45s,
+              border-color 0.45s;
   animation: fadeUp 0.6s cubic-bezier(0.2,0.8,0.2,1) both;
 }
 html.dark .card {
-  background: rgba(30, 35, 48, 0.55);
-  border-color: rgba(120, 140, 180, 0.22);
+  background: rgba(30, 35, 48, 0.28);
+  border-color: rgba(120, 140, 180, 0.08);
   box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.2),
-    0 8px 24px -12px rgba(0, 0, 0, 0.35);
+    0 1px 2px rgba(0, 0, 0, 0.12),
+    0 8px 24px -12px rgba(0, 0, 0, 0.22);
 }
 
-/* 默认柔色 tint —— 每张卡不同色调,打破纯白 */
+/* 统一的极淡冷灰 tint，让卡片和背景自然融合 */
 .card::after {
   content: '';
   position: absolute;
@@ -472,14 +472,12 @@ html.dark .card {
   z-index: 0;
   border-radius: inherit;
   background:
-    radial-gradient(120% 80% at 100% 0%, var(--card-tint-a, rgba(139,92,246,0.22)), transparent 62%),
-    radial-gradient(120% 80% at 0% 100%, var(--card-tint-b, rgba(236,72,153,0.18)), transparent 62%);
+    radial-gradient(120% 80% at 100% 0%, rgba(160, 170, 210, 0.05), transparent 62%),
+    radial-gradient(120% 80% at 0% 100%, rgba(180, 175, 200, 0.04), transparent 62%);
   opacity: 1;
-  transition: opacity 0.45s cubic-bezier(0.2,0.8,0.2,1);
   pointer-events: none;
 }
-html.dark .card::after { opacity: 0.85; }
-.card:hover::after { opacity: 0; }
+html.dark .card::after { opacity: 0.4; }
 .card:nth-child(1) { animation-delay: 0.25s; }
 .card:nth-child(2) { animation-delay: 0.32s; }
 .card:nth-child(3) { animation-delay: 0.39s; }
@@ -525,16 +523,15 @@ html.dark .card::after { opacity: 0.85; }
 }
 
 .card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 28px 64px -16px rgba(15,23,42,0.3);
-  color: #fff;
-  border-color: transparent;
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.34);
+  box-shadow: 0 14px 40px -10px rgba(15,23,42,0.12);
+  border-color: rgba(255, 255, 255, 0.18);
 }
-.card:hover .card-art {
-  opacity: 1;
-  transform: scale(1);
+html.dark .card:hover {
+  background: rgba(40, 46, 62, 0.38);
+  border-color: rgba(120, 140, 180, 0.14);
 }
-.card:hover .card-desc { color: rgba(255,255,255,0.85); }
 .card.inactive:hover .status-dot {
   background: #fff;
   box-shadow: 0 0 0 4px rgba(255,255,255,0.2);
@@ -589,36 +586,20 @@ html.dark .card::after { opacity: 0.85; }
 }
 
 /* =========================
-   Theme palettes (用于 hover 背景 + 默认 tint)
+   Theme palettes — hover 时露出的柔色光晕
 ========================= */
-.theme-aurora {
-  --card-tint-a: rgba(167,139,250,0.40);
-  --card-tint-b: rgba(240,171,252,0.28);
-}
 .theme-aurora .art-a { background: #a78bfa; }
 .theme-aurora .art-b { background: #f0abfc; }
 .theme-aurora .art-c { background: #60a5fa; }
 
-.theme-citrus {
-  --card-tint-a: rgba(253,224,71,0.40);
-  --card-tint-b: rgba(251,146,60,0.28);
-}
 .theme-citrus .art-a { background: #fde047; }
 .theme-citrus .art-b { background: #fb923c; }
 .theme-citrus .art-c { background: #f472b6; }
 
-.theme-violet {
-  --card-tint-a: rgba(129,140,248,0.40);
-  --card-tint-b: rgba(34,211,238,0.28);
-}
 .theme-violet .art-a { background: #818cf8; }
 .theme-violet .art-b { background: #22d3ee; }
 .theme-violet .art-c { background: #c084fc; }
 
-.theme-sunset {
-  --card-tint-a: rgba(252,165,165,0.40);
-  --card-tint-b: rgba(253,186,116,0.28);
-}
 .theme-sunset .art-a { background: #fca5a5; }
 .theme-sunset .art-b { background: #fdba74; }
 .theme-sunset .art-c { background: #a78bfa; }
