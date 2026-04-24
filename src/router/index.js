@@ -20,6 +20,9 @@ const routes = [
       { path: 'articles/new', name: 'AdminArticleNew', component: () => import('../views/admin/ArticleFormView.vue') },
       { path: 'articles/edit/:id', name: 'AdminArticleEdit', component: () => import('../views/admin/ArticleFormView.vue') },
       { path: 'comments', name: 'AdminComments', component: () => import('../views/admin/CommentListView.vue') },
+      { path: 'categories', name: 'AdminCategories', component: () => import('../views/admin/CategoryListView.vue') },
+      { path: 'categories/new', name: 'AdminCategoryNew', component: () => import('../views/admin/CategoryFormView.vue') },
+      { path: 'categories/edit/:id', name: 'AdminCategoryEdit', component: () => import('../views/admin/CategoryFormView.vue') },
     ],
   },
 ]

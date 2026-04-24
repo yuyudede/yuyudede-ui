@@ -85,6 +85,9 @@ async function fetchArticles(page = 0) {
     totalPages.value = data.totalPages
     totalElements.value = data.totalElements
     pageSize.value = data.size
+  } catch (err) {
+    console.error('Failed to fetch articles:', err)
+    ElMessage.error('获取文章列表失败: ' + (err.response?.data?.message || err.message || '未知错误'))
   } finally {
     loading.value = false
   }
