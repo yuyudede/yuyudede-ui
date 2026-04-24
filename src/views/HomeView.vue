@@ -237,9 +237,9 @@ onMounted(() => {
 
 /* Sidebar title */
 .sidebar-title {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
   margin-bottom: 12px;
 }
 
