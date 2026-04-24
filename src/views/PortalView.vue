@@ -527,11 +527,17 @@ html.dark .card::after { opacity: 0.4; }
   background: rgba(255, 255, 255, 0.34);
   box-shadow: 0 14px 40px -10px rgba(15,23,42,0.12);
   border-color: rgba(255, 255, 255, 0.18);
+  color: #fff;
 }
 html.dark .card:hover {
   background: rgba(40, 46, 62, 0.38);
   border-color: rgba(120, 140, 180, 0.14);
 }
+.card:hover .card-art {
+  opacity: 1;
+  transform: scale(1);
+}
+.card:hover .card-desc { color: rgba(255,255,255,0.85); }
 .card.inactive:hover .status-dot {
   background: #fff;
   box-shadow: 0 0 0 4px rgba(255,255,255,0.2);
