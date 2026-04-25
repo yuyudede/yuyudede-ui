@@ -31,10 +31,9 @@
           v-for="item in stats.daily"
           :key="item.date"
           class="bar-item"
-          :style="{ height: barHeight(item.count) + '%' }"
           :title="`${item.date}: ${item.count}`"
         >
-          <div class="bar-fill"></div>
+          <div class="bar-fill" :style="{ height: barHeight(item.count) + '%' }"></div>
           <div class="bar-label">{{ formatShortDate(item.date) }}</div>
         </div>
       </div>
@@ -76,8 +75,9 @@ const stats = ref({
 const maxDaily = ref(1)
 
 function barHeight(count) {
+  const c = Number(count) || 0
   if (!maxDaily.value || maxDaily.value <= 0) return 0
-  return Math.max(4, (count / maxDaily.value) * 100)
+  return Math.max(4, (c / maxDaily.value) * 100)
 }
 
 function formatShortDate(dateStr) {
