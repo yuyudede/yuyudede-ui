@@ -267,14 +267,14 @@ function formatTime(seconds) {
 // ==================== Game Actions ====================
 function selectCell(r, c) {
   if (isPaused.value) return
-  if (initial.value[r][c]) return
+  if (initial[r][c]) return
   selected.value = { row: r, col: c }
 }
 
 function inputNumber(num) {
   if (!selected.value || isPaused.value) return
   const { row, col } = selected.value
-  if (initial.value[row][col]) return
+  if (initial[row][col]) return
 
   history.value.push({ row, col, prev: board[row][col] })
 
@@ -301,7 +301,7 @@ function inputNumber(num) {
 function eraseCell() {
   if (!selected.value || isPaused.value) return
   const { row, col } = selected.value
-  if (initial.value[row][col]) return
+  if (initial[row][col]) return
   if (board[row][col] === 0) return
   history.value.push({ row, col, prev: board[row][col] })
   board[row][col] = 0
@@ -403,8 +403,8 @@ function cellClasses(r, c) {
     same: board[r][c] !== 0 && board[r][c] === board[row][col] && (r !== row || c !== col),
     related: r === row || c === col || (Math.floor(r / 3) === Math.floor(row / 3) && Math.floor(c / 3) === Math.floor(col / 3)),
     conflict: conflicts.value.has(key) && board[r][c] !== 0,
-    initial: initial.value[r][c],
-    wrong: board[r][c] !== 0 && board[r][c] !== solution[r][c] && !initial.value[r][c],
+    initial: initial[r][c],
+    wrong: board[r][c] !== 0 && board[r][c] !== solution[r][c] && !initial[r][c],
   }
 }
 
