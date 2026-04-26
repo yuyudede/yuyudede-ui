@@ -9,6 +9,8 @@ const routes = [
   { path: '/category/:slug', name: 'Category', component: () => import('../views/CategoryView.vue') },
   { path: '/tags', name: 'Tags', component: () => import('../views/TagListView.vue') },
   { path: '/tag/:slug', name: 'Tag', component: () => import('../views/TagView.vue') },
+  { path: '/tools', name: 'Toolbox', component: () => import('../views/ToolboxView.vue') },
+  { path: '/tools/sudoku', name: 'Sudoku', component: () => import('../views/SudokuView.vue') },
   { path: '/login', name: 'Login', component: () => import('../views/LoginView.vue') },
   {
     path: '/admin',

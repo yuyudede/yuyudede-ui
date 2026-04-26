@@ -152,8 +152,8 @@ const modules = [
   {
     title: '工具箱',
     desc: '日常开发与效率小工具合集。',
-    link: null,
-    active: false,
+    link: '/tools',
+    active: true,
     theme: 'theme-citrus',
     icon: `<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.8'>
       <path d='M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.7-3.7a6 6 0 0 1-7.9 7.9L6.4 21a2.1 2.1 0 1 1-3-3l7.5-7.5a6 6 0 0 1 7.9-7.9l-3.7 3.7z'/></svg>`
