@@ -8,11 +8,6 @@
 
     <section class="tool-grid">
       <router-link to="/tools/sudoku" class="tool-card theme-sudoku">
-        <div class="tool-card-art">
-          <div class="art-blur art-a"></div>
-          <div class="art-blur art-b"></div>
-          <div class="art-blur art-c"></div>
-        </div>
         <div class="tool-card-inner">
           <div class="tool-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
@@ -41,7 +36,7 @@
         </div>
       </article>
 
-      <article class="tool-panel wide">
+      <article class="tool-panel">
         <div class="panel-head">
           <h2>JSON 格式化</h2>
           <button @click="formatJson">格式化</button>
@@ -168,8 +163,8 @@ formatJson()
 
 .tool-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
 }
 
 .tool-card,
@@ -180,49 +175,22 @@ formatJson()
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
   overflow: hidden;
+  min-height: 220px;
 }
 
 .tool-card {
   display: block;
-  min-height: 220px;
   padding: 22px;
   text-decoration: none;
   color: var(--text-primary);
-  isolation: isolate;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
 }
 
 .tool-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 44px -14px rgba(15,23,42,0.2);
-  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 16px 44px -16px rgba(15,23,42,0.18);
+  border-color: rgba(129, 140, 248, 0.28);
 }
-
-.tool-card-art {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  opacity: 0;
-  transition: opacity 0.4s;
-}
-
-.tool-card:hover .tool-card-art {
-  opacity: 1;
-}
-
-.art-blur {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(26px);
-  opacity: 0.85;
-}
-
-.art-a { width: 90%; height: 90%; top: -20%; left: -20%; }
-.art-b { width: 80%; height: 80%; top: 15%; right: -25%; }
-.art-c { width: 70%; height: 70%; bottom: -25%; left: 15%; }
-.theme-sudoku .art-a { background: #818cf8; }
-.theme-sudoku .art-b { background: #a78bfa; }
-.theme-sudoku .art-c { background: #22d3ee; }
 
 .tool-card-inner {
   position: relative;
@@ -247,19 +215,11 @@ formatJson()
   line-height: 1.55;
 }
 
-.tool-card:hover .tool-desc {
-  color: rgba(255,255,255,0.85);
-}
-
 .tool-panel {
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 14px;
-}
-
-.tool-panel.wide {
-  grid-column: span 2;
 }
 
 .panel-head {
@@ -346,7 +306,7 @@ pre {
 
 @media (max-width: 900px) {
   .tool-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
   }
 }
 
@@ -356,9 +316,6 @@ pre {
   }
   .tool-grid {
     grid-template-columns: 1fr;
-  }
-  .tool-panel.wide {
-    grid-column: span 1;
   }
 }
 </style>
