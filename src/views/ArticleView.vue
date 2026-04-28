@@ -124,23 +124,53 @@
             </el-form>
           </div>
         </section>
+
+        <section v-if="relatedArticles.length > 0" class="related-section glass-container">
+          <h3 class="related-title">继续阅读</h3>
+          <div class="related-list">
+            <router-link
+              v-for="item in relatedArticles"
+              :key="item.id"
+              class="related-item"
+              :to="`/article/${item.slug}`"
+            >
+              <span>{{ item.title }}</span>
+              <small>{{ formatDate(item.createdAt) }}</small>
+            </router-link>
+          </div>
+        </section>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
+import { ref, onBeforeUnmount, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useHead } from '@unhead/vue'
 import { ElMessage } from 'element-plus'
-import hljs from 'highlight.js'
+import hljs from 'highlight.js/lib/core'
+import javascript from 'highlight.js/lib/languages/javascript'
+import java from 'highlight.js/lib/languages/java'
+import xml from 'highlight.js/lib/languages/xml'
+import bash from 'highlight.js/lib/languages/bash'
+import json from 'highlight.js/lib/languages/json'
 import 'highlight.js/styles/github-dark.css'
 import api from '../api'
+
+hljs.registerLanguage('javascript', javascript)
+hljs.registerLanguage('js', javascript)
+hljs.registerLanguage('java', java)
+hljs.registerLanguage('html', xml)
+hljs.registerLanguage('xml', xml)
+hljs.registerLanguage('bash', bash)
+hljs.registerLanguage('shell', bash)
+hljs.registerLanguage('json', json)
 
 const route = useRoute()
 const article = ref(null)
 const comments = ref([])
+const relatedArticles = ref([])
 const loading = ref(false)
 const submitting = ref(false)
 const formRef = ref(null)
@@ -187,6 +217,7 @@ async function fetchArticle() {
   try {
     const { data } = await api.get(`/articles/${route.params.slug}`)
     article.value = data
+    await fetchRelated()
     await nextTick()
     highlightCode()
     extractToc()
@@ -199,6 +230,15 @@ async function fetchArticle() {
 async function fetchComments() {
   const { data } = await api.get(`/articles/${route.params.slug}/comments`)
   comments.value = data
+}
+
+async function fetchRelated() {
+  try {
+    const { data } = await api.get(`/articles/${route.params.slug}/related`)
+    relatedArticles.value = data
+  } catch {
+    relatedArticles.value = []
+  }
 }
 
 function highlightCode() {
@@ -289,10 +329,21 @@ async function submitComment() {
   }
 }
 
-onMounted(() => {
+async function loadPage() {
+  article.value = null
+  comments.value = []
+  relatedArticles.value = []
+  tocItems.value = []
+  activeId.value = ''
   fetchArticle()
   fetchComments()
-})
+}
+
+watch(
+  () => route.params.slug,
+  () => loadPage(),
+  { immediate: true }
+)
 
 onBeforeUnmount(() => {
   if (observer) observer.disconnect()
@@ -551,6 +602,39 @@ onBeforeUnmount(() => {
 /* 评论区 */
 .comments-section {
   padding: 32px;
+}
+
+.related-section {
+  padding: 28px 32px;
+}
+
+.related-title {
+  font-size: 1.15rem;
+  margin-bottom: 16px;
+}
+
+.related-list {
+  display: grid;
+  gap: 10px;
+}
+
+.related-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+  color: var(--text-primary);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.related-item:last-child {
+  border-bottom: none;
+}
+
+.related-item small {
+  flex-shrink: 0;
+  color: var(--text-secondary);
 }
 
 .comments-title {

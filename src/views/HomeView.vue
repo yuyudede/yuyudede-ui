@@ -3,6 +3,11 @@
     <HeroSection />
 
     <div class="container" id="articles">
+      <form class="quick-search" @submit.prevent="goSearch">
+        <input v-model="searchKeyword" type="search" placeholder="搜索文章、标签或代码片段" />
+        <button type="submit" :disabled="!searchKeyword.trim()">搜索</button>
+      </form>
+
       <el-row :gutter="28">
         <el-col :span="16" :xs="24" :sm="24" :md="16">
           <div v-loading="loading" class="article-list">
@@ -88,8 +93,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useHead } from '@unhead/vue'
+import { useRouter } from 'vue-router'
 import api from '../api'
 import HeroSection from '../components/HeroSection.vue'
 import ArticleCard from '../components/ArticleCard.vue'
@@ -107,11 +113,13 @@ useHead({
 const articles = ref([])
 const categories = ref([])
 const tags = ref([])
+const searchKeyword = ref('')
 const loading = ref(false)
 const currentPage = ref(1)
 const totalPages = ref(0)
 const totalElements = ref(0)
 const pageSize = ref(10)
+const router = useRouter()
 
 async function fetchArticles(page = 0) {
   loading.value = true
@@ -141,6 +149,13 @@ function handlePageChange(page) {
   fetchArticles(page - 1)
 }
 
+function goSearch() {
+  const q = searchKeyword.value.trim()
+  if (q) {
+    router.push({ name: 'Search', query: { q } })
+  }
+}
+
 onMounted(() => {
   fetchArticles()
   fetchCategories()
@@ -162,6 +177,44 @@ onMounted(() => {
 
 .article-list {
   min-height: 200px;
+}
+
+.quick-search {
+  display: flex;
+  gap: 10px;
+  max-width: 720px;
+  margin: 0 auto 28px;
+  padding: 8px;
+  border-radius: 16px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.quick-search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  padding: 11px 14px;
+}
+
+.quick-search button {
+  border: none;
+  border-radius: 10px;
+  padding: 0 20px;
+  color: #fff;
+  background: linear-gradient(135deg, #818cf8, #ec4899);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.quick-search button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .pagination-wrapper {

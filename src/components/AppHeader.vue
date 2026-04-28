@@ -68,6 +68,7 @@ const userMenuOpen = ref(false)
 const navItems = [
   { path: '/', label: '首页' },
   { path: '/blog', label: '博客' },
+  { path: '/search', label: '搜索' },
   { path: '/tools', label: '工具箱' },
 ]
 

@@ -13,11 +13,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      output: {
-        manualChunks: {
-          hljs: ['highlight.js'],
-        },
-      },
+      output: {},
     },
   },
 })
