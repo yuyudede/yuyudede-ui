@@ -31,6 +31,7 @@ npm run preview
 - `/` portal
 - `/blog` article list
 - `/search` article search
+- `/codex` Codex daily article archive
 - `/article/:slug` article detail, comments, and related articles
 - `/categories`, `/category/:slug`
 - `/tags`, `/tag/:slug`
